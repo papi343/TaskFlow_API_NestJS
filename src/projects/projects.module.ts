@@ -7,9 +7,10 @@ import { ProjectController } from './presentation/http/projects.controller';
 import { GetMyProjectsUseCase } from './application/use-cases/get-my-projects.use-case';
 import { GetProjectUseCase } from './application/use-cases/get-project.use-case';
 import { UpdateProjectUseCase } from './application/use-cases/update-project.use-case';
+import { ProjectMembersModule } from './project-members/project-members.module';
 
 @Module({
-    imports:[PrismaModule],
+    imports:[PrismaModule, ProjectMembersModule],
     controllers:[ProjectController],
     providers:[
         CreateProjectUseCase,

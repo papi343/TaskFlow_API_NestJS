@@ -7,13 +7,14 @@ import {ConfigModule} from '@nestjs/config';
 import {PrismaModule} from './prisma/prisma.module';
 import { AuthModule } from './auth/auth.module';
 import { ProjectsModule } from './projects/projects.module';
+import { ProjectMembersController } from './projects/project-members/presentation/http/project-members.controller';
 
 
 @Module({
   imports: [UsersModule,ConfigModule.forRoot({
     isGlobal: true,
   }),PrismaModule, AuthModule, ProjectsModule],
-  controllers: [AppController],
+  controllers: [AppController, ProjectMembersController],
   providers: [AppService, PrismaService],
 })
 export class AppModule {}
