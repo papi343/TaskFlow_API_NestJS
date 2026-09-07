@@ -8,9 +8,10 @@ import { GetMyProjectsUseCase } from './application/use-cases/get-my-projects.us
 import { GetProjectUseCase } from './application/use-cases/get-project.use-case';
 import { UpdateProjectUseCase } from './application/use-cases/update-project.use-case';
 import { ProjectMembersModule } from './project-members/project-members.module';
+import { TasksModule } from './tasks/tasks.module';
 
 @Module({
-    imports:[PrismaModule, ProjectMembersModule],
+    imports:[PrismaModule, ProjectMembersModule, TasksModule],
     controllers:[ProjectController],
     providers:[
         CreateProjectUseCase,

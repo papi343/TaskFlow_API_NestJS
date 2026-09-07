@@ -24,6 +24,7 @@ model User {
   updatedAt      DateTime        @updatedAt
   projectsMember ProjectMember[]
   projects       Project[]
+  notifications Notification[]
 }
 
 model Role {
@@ -68,4 +69,13 @@ model Task {
   projectId Int
 
   project Project @relation(fields: [projectId], references: [id])
+}
+
+model Notification {
+  id        Int      @id @default(autoincrement())
+  message   String
+  read      Boolean  @default(false)
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
 }
