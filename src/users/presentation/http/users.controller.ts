@@ -1,36 +1,31 @@
-import { Controller ,Post,Get,Req,UseGuards} from '@nestjs/common';
+import { Controller, Post, Get, Req, UseGuards, Body } from '@nestjs/common';
 import { CreateUserUseCase } from '../../application/use-cases/create-user.use-case';
 import { User } from '../../domain/entities/user.entity';
-import { Body } from '@nestjs/common';
 import { CreateUserDto } from '../../presentation/http/dto/create_user_dto';
 import { JwtAuthGuard } from '../../../auth/guards/jwt-auth.guard';
 
 @Controller('users')
 export class UsersController {
-    constructor(private readonly createUserUseCase:CreateUserUseCase,){
+  constructor(private readonly createUserUseCase: CreateUserUseCase) {}
 
-    } 
+  @Post()
+  async createUser(@Body() dto: CreateUserDto) {
+    const user = new User(
+      null,
+      dto.nom,
+      dto.prenom || '',
+      dto.email,
+      dto.password,
+      dto.roleId || 1, // Default roleId to 1 if not provided
+    );
 
-    @Post()
-    async createUser(@Body() dto:CreateUserDto){
-        const user = new User(
-            null,
-            dto.nom,
-            dto.prenom,
-            dto.email,
-            dto.password,
-            dto.roleId,
+    const response = await this.createUserUseCase.execute(user);
+    return response;
+  }
 
-        )
-
-        const response =  this.createUserUseCase.execute(user);
-        return response;
-    }
-
-    @Get('me')
-    @UseGuards(JwtAuthGuard)
-    getMe(@Req() req: any) {
-        return req.user;
-    }
-
+  @Get('me')
+  @UseGuards(JwtAuthGuard)
+  getMe(@Req() req: any) {
+    return req.user;
+  }
 }

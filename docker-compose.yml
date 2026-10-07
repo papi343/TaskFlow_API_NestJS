@@ -1,0 +1,29 @@
+services:
+  db:
+    image: mariadb:11
+    container_name: taskflow-db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: taskflow
+    ports:
+      - "3306:3306"
+    volumes:
+      - taskflow_db_data:/var/lib/mysql
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: taskflow-api
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: mysql://root:root@db:3306/taskflow
+      JWT_SECRET: ${JWT_SECRET}
+    depends_on:
+      - db
+
+volumes:
+  taskflow_db_data:

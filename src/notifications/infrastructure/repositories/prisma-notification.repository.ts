@@ -1,28 +1,22 @@
 import { Injectable } from '@nestjs/common';
-
 import { PrismaService } from '../../../prisma/prisma.service';
 import { Notification } from '../../domain/entities/notification.entity';
 import { NotificationRepository } from '../../domain/repositories/notification.repository';
 
 @Injectable()
-export class PrismaNotificationRepository
-  extends NotificationRepository
-{
+export class PrismaNotificationRepository extends NotificationRepository {
   constructor(private readonly prisma: PrismaService) {
     super();
   }
 
-  async create(
-    notification: Notification,
-  ): Promise<Notification> {
-    const createdNotification =
-      await this.prisma.notification.create({
-        data: {
-          message: notification.message,
-          read: notification.read,
-          userId: notification.userId,
-        },
-      });
+  async create(notification: Notification): Promise<Notification> {
+    const createdNotification = await this.prisma.notification.create({
+      data: {
+        message: notification.message,
+        read: notification.read,
+        userId: notification.userId,
+      },
+    });
 
     return new Notification(
       createdNotification.id,
@@ -33,13 +27,10 @@ export class PrismaNotificationRepository
     );
   }
 
-  async findById(
-    id: number,
-  ): Promise<Notification | null> {
-    const notification =
-      await this.prisma.notification.findUnique({
-        where: { id },
-      });
+  async findById(id: number): Promise<Notification | null> {
+    const notification = await this.prisma.notification.findUnique({
+      where: { id },
+    });
 
     if (!notification) {
       return null;
@@ -54,13 +45,10 @@ export class PrismaNotificationRepository
     );
   }
 
-  async findByUserId(
-    userId: number,
-  ): Promise<Notification[]> {
-    const notifications =
-      await this.prisma.notification.findMany({
-        where: { userId },
-      });
+  async findByUserId(userId: number): Promise<Notification[]> {
+    const notifications = await this.prisma.notification.findMany({
+      where: { userId },
+    });
 
     return notifications.map(
       (notification) =>
@@ -74,16 +62,13 @@ export class PrismaNotificationRepository
     );
   }
 
-  async markAsRead(
-    id: number,
-  ): Promise<Notification> {
-    const notification =
-      await this.prisma.notification.update({
-        where: { id },
-        data: {
-          read: true,
-        },
-      });
+  async markAsRead(id: number): Promise<Notification> {
+    const notification = await this.prisma.notification.update({
+      where: { id },
+      data: {
+        read: true,
+      },
+    });
 
     return new Notification(
       notification.id,
@@ -92,5 +77,11 @@ export class PrismaNotificationRepository
       notification.userId,
       notification.createdAt,
     );
+  }
+
+  async delete(id: number): Promise<void> {
+    await this.prisma.notification.delete({
+      where: { id },
+    });
   }
 }
